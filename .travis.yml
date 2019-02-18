@@ -10,10 +10,14 @@ script:
   - tar -zcvf ${TRAVIS_REPO_SLUG#*/}.tar.gz -C _site ./
   - sha256sum ${TRAVIS_REPO_SLUG#*/}.tar.gz
 
+before_deploy:
+  - export BODY="$(sha256sum ${TRAVIS_REPO_SLUG#*/}.tar.gz)"
+
 deploy:
   provider: releases
   api_key: $GITHUB_OAUTH_TOKEN
   file: ${TRAVIS_REPO_SLUG#*/}.tar.gz
   skip_cleanup: true
+  body: ${BODY}
   on:
     tags: true
